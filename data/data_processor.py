@@ -20,10 +20,11 @@
 # ========================================================================
 from urllib2 import urlopen
 import json
+import os
 
 API = 'http://data.mgt.chinaso365.com/datasrv/1.0/resources/01257/search?' \
       'fields=id,bigPic&filters=EQS_thirdLable,突发事件|NES_bigPic,NULL' \
-      '&pagestart=1&fetchsize=10'
+      '&pagestart=1&fetchsize=10000'
 
 
 def main():
@@ -58,7 +59,46 @@ def get_images_from_api():
 
 def save_images(images):
     """保存图片至本地"""
-    pass
+    for image in images:
+        rid = image[0]
+        url = image[1]
+        save_image(url, rid)
+
+
+def save_image(img_url, file_name, file_path='images'):
+    """
+    保存单张图片
+    :param img_url:
+    :param file_name:
+    :param file_path:
+    :return:
+    """
+    # 保存图片到磁盘文件夹 file_path中，默认为当前脚本运行目录下的 book\img文件夹
+    try:
+        if not os.path.exists(file_path):
+            print '文件夹', file_path, '不存在，重新建立'
+            # os.mkdir(file_path)
+            os.makedirs(file_path)
+        # 获得图片后缀
+        if 'jpeg' in img_url:
+            file_suffix = '.jpeg'
+        elif 'jpg' in img_url:
+            file_suffix = '.jpg'
+        elif 'png' in img_url:
+            file_suffix = '.png'
+        else:
+            file_suffix = '.jpeg'
+        # 拼接图片名（包含路径）
+        filename = '{}{}{}{}'.format(file_path, os.path.sep, file_name, file_suffix)
+        # 下载图片，并保存到文件夹中
+        response = urlopen(img_url)
+        cat_img = response.read()
+        with open(filename, 'wb') as f:
+            f.write(cat_img)
+    except IOError as e:
+        print '文件操作失败', e
+    except Exception as e:
+        print '错误 ：', e
 
 
 if __name__ == '__main__':
