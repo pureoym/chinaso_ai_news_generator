@@ -26,3 +26,15 @@ source /application/search/py37env/py37env/bin/activate
 ```
 deactivate
 ```
+配置Python镜像：
+```
+mkdir /application/search/.pip/
+vim /application/search/.pip/pip.conf
+```
+在配置文件中写入如下：
+```
+[global]
+trusted-host=mirrors.aliyun.com
+index-url=http://mirrors.aliyun.com/pypi/simple
+```
+直接运行pip install 即可。在非虚拟环境或者虚拟环境都可以使用镜像。
