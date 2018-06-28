@@ -1,7 +1,9 @@
 ### 安装python3
-linux环境 ：
+linux环境：
 官网下载安装包：
+```
 https://www.python.org/downloads/release/python-366/
+```
 上传服务器，解压：
 
 ```
