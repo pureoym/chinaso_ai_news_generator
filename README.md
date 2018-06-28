@@ -38,3 +38,7 @@ trusted-host=mirrors.aliyun.com
 index-url=http://mirrors.aliyun.com/pypi/simple
 ```
 直接运行pip install 即可。在非虚拟环境或者虚拟环境都可以使用镜像。
+另，如果pip安装包时，出现需要升级预装版本，可在安装时直接忽略预装版本。例如：
+```
+pip install numpy --ignore-intalled numpy
+```
