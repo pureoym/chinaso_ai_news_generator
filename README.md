@@ -42,3 +42,11 @@ index-url=http://mirrors.aliyun.com/pypi/simple
 ```
 pip install numpy --ignore-intalled numpy
 ```
+脚本进入虚拟环境：编写脚本
+```
+vi /application/search/bin/enter_python37_env.sh
+```
+然后在/application/search目录下，通过如下命令执行脚本：
+```
+source bin/enter_python37_env.sh
+```
