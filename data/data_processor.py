@@ -18,29 +18,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ========================================================================
-from urllib import request
-from urllib.parse import quote
+import codecs
+import csv
 import json
 import os
-import csv
-import codecs
-import string
-import utils
-
-
-
-API_SIZE = 10
-# NEWS_API = 'http://data.mgt.chinaso365.com/datasrv/1.0/resources/01257/search?' \
-#            'fields=id,secondLable,transferTime,headLine,dataContent,bigPic' \
-#            '&filters=EQS_thirdLable,突发事件&orders=transferTime_desc&pagestart=1' \
-#            '&fetchsize=' + str(API_SIZE)
+from utils import http_utils
 
 NEWS_API = 'http://data.mgt.chinaso365.com/datasrv/1.0/resources/01257/search?' \
       'fields=id,secondLable,transferTime,headLine,dataContent,bigPic' \
       '&filters=EQS_thirdLable,突发事件|EQS_secondLable,国内新闻|NES_bigPic,NULL' \
       '&pagestart=1&fetchsize=10'
 
-url=quote(NEWS_API,safe=string.printable)
 
 
 def main():
@@ -95,8 +83,7 @@ def get_news_from_api():
     :return: news
     """
     news = []
-    response = request.urlopen(url)
-    json_str = response.read()
+    json_str = http_utils.get_data_from_url(NEWS_API)
     data = json.loads(json_str)
     results = data["value"]
     for result in results:
@@ -136,8 +123,7 @@ def save_image(img_url, file_name, file_path='images'):
         # 拼接图片名（包含路径）
         filename = '{}{}{}{}'.format(file_path, os.path.sep, file_name, file_suffix)
         # 下载图片，并保存到文件夹中
-        response = request.urlopen(img_url)
-        cat_img = response.read()
+        cat_img = http_utils.get_data_from_url(img_url)
         with open(filename, 'wb') as f:
             f.write(cat_img)
     except IOError as e:
