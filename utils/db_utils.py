@@ -32,7 +32,7 @@ def get_mysql_conn(conf):
     :return:
     '''
     try:
-        conn = MySQLdb.connect(host=conf['host'],
+        conn = pymysql.connect(host=conf['host'],
                                user=conf['user'],
                                passwd=conf['passwd'],
                                db=conf['db'],
