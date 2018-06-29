@@ -26,13 +26,14 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def get_data_from_api(url):
+def get_data_from_url(url):
     """
-    通过URL获取接口数据
+    通过URL获取响应数据，返回响应所读取的内容
     :param url:
     :return:
     """
     url2 = quote(url, safe=string.printable)
     response = request.urlopen(url2)
-    json_str = response.read()
-    return json_str
+    data = response.read()
+    return data
+
