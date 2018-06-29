@@ -18,3 +18,83 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ========================================================================
+
+# https://github.com/pureoym/THUTag/blob/master/basepackage/smt/src/java/org/thunlp/language/chinese/LangUtils.java
+#
+def remove_html_tag(input_str):
+    """
+    去除文本中的p标签
+    :param input_str:
+    :return:
+    """
+    return input_str.replace('<p>', '').replace('</p>', '')
+
+
+def remove_extra_spaces(input_str):
+    """
+    去除多余的空格
+    :param input_str:
+    :return:
+    """
+    tmp = input_str.split()
+    output_str = ' '.join(tmp)
+    return output_str
+
+
+def remove_empty_paragraph(input_str):
+    """
+    去除空段落
+    :param input_str:
+    :return:
+    """
+    return input_str.replace('<p></p>', '').replace('<p> </p>', '')
+
+
+def generate_paragraph_head(input_str):
+    """
+
+    :param input_str:
+    :return:
+    """
+    return input_str.replace('<p> ', '<p>').replace('<p>', '<p>    ')
+
+
+def map_full_width_to_half_width(input_str):
+    """
+    全角转半角
+    :param input_str:
+    :return:
+    """
+    output_str = ""
+    for input_char in input_str:
+        inside_code = ord(input_char)
+        if inside_code == 12288:  # 全角空格直接转换
+            inside_code = 32
+        elif (inside_code >= 65281 and inside_code <= 65374):  # 全角字符（除空格）根据关系转化
+            inside_code -= 65248
+        output_str += chr(inside_code)
+    return output_str
+
+
+def cht_to_chs(input_str):
+    pass
+
+
+def chs_to_cht(input_str):
+    pass
+
+
+def chinese_clean(content):
+    # print('input='+content)
+    # content = remove_html_tag(content)
+    content = map_full_width_to_half_width(content)
+    content = remove_extra_spaces(content)
+    content = remove_empty_paragraph(content)
+    content = generate_paragraph_head(content)
+    # print('output=' + content)
+    return content
+
+
+if __name__ == "__main__":
+    print(remove_extra_spaces('＠％￥＋ｍｎ１２３abc　　，  博。     客＆……％园”“！？   '))
+    print('@％+mn123abc  ,博。客&……%园""!?')
