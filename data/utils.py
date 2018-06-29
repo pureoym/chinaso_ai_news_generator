@@ -21,8 +21,17 @@
 from urllib import request
 from urllib.parse import quote
 import string
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def get_data_from_api(url):
+    """
+    通过URL获取接口数据
+    :param url:
+    :return:
+    """
     url2 = quote(url, safe=string.printable)
     response = request.urlopen(url2)
     json_str = response.read()
