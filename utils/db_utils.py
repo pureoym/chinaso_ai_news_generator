@@ -80,6 +80,5 @@ def execute_mysql_sql(conn, sql):
     except MySQLdb.Error, e:
         conn.rollback()
         logger.error(e)
-        print sql
     finally:
-cursor.close()
+        cursor.close()
