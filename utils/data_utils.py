@@ -19,8 +19,7 @@
 # limitations under the License.
 # ========================================================================
 
-# https://github.com/pureoym/THUTag/blob/master/basepackage/smt/src/java/org/thunlp/language/chinese/LangUtils.java
-#
+
 def remove_html_tag(input_str):
     """
     去除文本中的p标签
@@ -52,7 +51,7 @@ def remove_empty_paragraph(input_str):
 
 def generate_paragraph_head(input_str):
     """
-
+    生成段首。生成逻辑<p>加四个英文空格
     :param input_str:
     :return:
     """
@@ -70,7 +69,8 @@ def map_full_width_to_half_width(input_str):
         inside_code = ord(input_char)
         if inside_code == 12288:  # 全角空格直接转换
             inside_code = 32
-        elif (inside_code >= 65281 and inside_code <= 65374):  # 全角字符（除空格）根据关系转化
+        elif (inside_code >= 65313 and inside_code <= 65370) or \
+                (inside_code >= 65296 and inside_code <= 65305):  # 全角字符（除空格）根据关系转化
             inside_code -= 65248
         output_str += chr(inside_code)
     return output_str
@@ -98,3 +98,8 @@ def chinese_clean(content):
 if __name__ == "__main__":
     print(remove_extra_spaces('＠％￥＋ｍｎ１２３abc　　，  博。     客＆……％园”“！？   '))
     print('@％+mn123abc  ,博。客&……%园""!?')
+    print(ord('，'))
+    print(ord('@'))
+    print(ord('^'))
+    for i in range(65281, 65375):
+        print(str(i) + ":[" + chr(i) + "] => [" + chr(i - 65248) + "]")
