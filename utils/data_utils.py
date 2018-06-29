@@ -19,7 +19,6 @@
 # limitations under the License.
 # ========================================================================
 
-
 def remove_html_tag(input_str):
     """
     去除文本中的p标签
