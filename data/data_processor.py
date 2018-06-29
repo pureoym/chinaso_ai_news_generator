@@ -38,9 +38,7 @@ NEWS_API = 'http://data.mgt.chinaso365.com/datasrv/1.0/resources/01257/search?' 
 def main():
     news_list = get_news_from_api()  # 通过接口获取新闻数据
     text_process(news_list)  # 处理文本，保存至本地
-    # image_process(news_list)  # 保存图片    至本地
-    # 保存图片    至本地
-    # 保存图片　　至本地
+    # image_process(news_list)  # 保存图片至本地
 
 
 def text_process(news_list):
