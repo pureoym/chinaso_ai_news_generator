@@ -18,51 +18,96 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ========================================================================
-from urllib2 import urlopen
+from urllib import request
+from urllib.parse import quote
 import json
 import os
+import csv
+import codecs
+import string
+import utils
 
-API = 'http://data.mgt.chinaso365.com/datasrv/1.0/resources/01257/search?' \
-      'fields=id,bigPic&filters=EQS_thirdLable,突发事件|NES_bigPic,NULL' \
-      '&pagestart=1&fetchsize=10000'
+
+
+API_SIZE = 10
+# NEWS_API = 'http://data.mgt.chinaso365.com/datasrv/1.0/resources/01257/search?' \
+#            'fields=id,secondLable,transferTime,headLine,dataContent,bigPic' \
+#            '&filters=EQS_thirdLable,突发事件&orders=transferTime_desc&pagestart=1' \
+#            '&fetchsize=' + str(API_SIZE)
+
+NEWS_API = 'http://data.mgt.chinaso365.com/datasrv/1.0/resources/01257/search?' \
+      'fields=id,secondLable,transferTime,headLine,dataContent,bigPic' \
+      '&filters=EQS_thirdLable,突发事件|EQS_secondLable,国内新闻|NES_bigPic,NULL' \
+      '&pagestart=1&fetchsize=10'
+
+url=quote(NEWS_API,safe=string.printable)
 
 
 def main():
-    image_process()
+    news_list = get_news_from_api()  # 通过接口获取新闻数据
+    text_process(news_list)  # 处理文本，保存至本地
+    # image_process(news_list)  # 保存图片至本地
 
 
-def image_process():
+def text_process(news_list):
+    """
+    下载新闻正文等字段，过滤正文，并储存至本地。
+    存储格式：
+    ID&&&时间&&&标签&&&标题&&&正文
+    :return:
+    """
+    length = len(news_list)
+    filename = 'news.csv'
+    out = ''
+    with open(filename, "wb") as csvfile:
+        csvfile.write(codecs.BOM_UTF8)
+        writer = csv.writer(csvfile,dialect=("excel"))
+        # writer.writerow(map(lambda x:str.encode(x),["id", "title", "doc", "img_url"]))
+        for i, news in enumerate(news_list):
+            nid = str(news[0])
+            title = news[3]
+            doc = news[4]
+            img_url = news[5]
+            writer.writerow(map(lambda x:str.encode(x),[nid, title, doc, img_url]))
+            if i % 10 == 0:
+                print('image process : ' + str(i) + '/' + str(length))
+
+
+def image_process(news_list):
     """
     下载图片，并重命名图片。重命名方法：资源主键.jpg
     :return:
     """
-    images = get_images_from_api()
-    save_images(images)
+    length = len(news_list)
+    for i, news in enumerate(news_list):
+        nid = news[0]
+        img_url = news[5]
+        if img_url is not None:  # 如果有图片，则下载保存至本地
+            save_image(img_url, nid)
+        if i % 10 == 0:
+            print('image process : ' + str(i) + '/' + str(length))
 
 
-def get_images_from_api():
+def get_news_from_api():
     """
-    通过接口获取 (资源ID，图片URL) 列表
-    :return:
+    通过接口获取news列表
+    news包含字段(nid, time, label, title, doc, img_url)
+    :return: news
     """
-    images = []
-    response = urlopen(API)
+    news = []
+    response = request.urlopen(url)
     json_str = response.read()
     data = json.loads(json_str)
     results = data["value"]
     for result in results:
-        rid = str(result.get('id'))
-        url = result.get('bigPic')
-        images.append((rid, url))
-    return images
-
-
-def save_images(images):
-    """保存图片至本地"""
-    for image in images:
-        rid = image[0]
-        url = image[1]
-        save_image(url, rid)
+        nid = result.get('id')
+        img_url = result.get('bigPic')
+        time = result.get('transferTime')
+        label = result.get('secondLable')
+        title = result.get('headLine')
+        doc = result.get('dataContent')
+        news.append((nid, time, label, title, doc, img_url))
+    return news
 
 
 def save_image(img_url, file_name, file_path='images'):
@@ -73,10 +118,10 @@ def save_image(img_url, file_name, file_path='images'):
     :param file_path:
     :return:
     """
-    # 保存图片到磁盘文件夹 file_path中，默认为当前脚本运行目录下的 book\img文件夹
+    # 保存图片到磁盘文件夹 file_path中，默认为当前脚本运行目录下的images文件夹
     try:
         if not os.path.exists(file_path):
-            print '文件夹', file_path, '不存在，重新建立'
+            print('文件夹', file_path, '不存在，重新建立')
             # os.mkdir(file_path)
             os.makedirs(file_path)
         # 获得图片后缀
@@ -91,14 +136,14 @@ def save_image(img_url, file_name, file_path='images'):
         # 拼接图片名（包含路径）
         filename = '{}{}{}{}'.format(file_path, os.path.sep, file_name, file_suffix)
         # 下载图片，并保存到文件夹中
-        response = urlopen(img_url)
+        response = request.urlopen(img_url)
         cat_img = response.read()
         with open(filename, 'wb') as f:
             f.write(cat_img)
     except IOError as e:
-        print '文件操作失败', e
+        print('文件操作失败', e)
     except Exception as e:
-        print '错误 ：', e
+        print('错误 ：', e)
 
 
 if __name__ == '__main__':
