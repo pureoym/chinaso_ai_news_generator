@@ -22,7 +22,9 @@ import codecs
 import csv
 import json
 import os
-from utils import http_utils,data_utils
+# from ..utils import http_utils, data_utils
+from ..utils.http_utils import get_data_from_url
+from ..utils.data_utils import chinese_clean
 
 API_SIZE = 100
 # NEWS_API = 'http://data.mgt.chinaso365.com/datasrv/1.0/resources/01257/search?' \
@@ -50,8 +52,8 @@ def text_process(news_list):
     """
     for news in news_list:
         doc = news[4]
-        print("input="+doc)
-        print("output="+data_utils.chinese_clean(doc))
+        print("input=" + doc)
+        print("output=" + chinese_clean(doc))
 
 
 def text_process_bac(news_list):
@@ -100,7 +102,7 @@ def get_news_from_api():
     :return: news
     """
     news = []
-    json_str = http_utils.get_data_from_url(NEWS_API)
+    json_str = get_data_from_url(NEWS_API)
     data = json.loads(json_str)
     results = data["value"]
     for result in results:
@@ -140,7 +142,7 @@ def save_image(img_url, file_name, file_path='images'):
         # 拼接图片名（包含路径）
         filename = '{}{}{}{}'.format(file_path, os.path.sep, file_name, file_suffix)
         # 下载图片，并保存到文件夹中
-        cat_img = http_utils.get_data_from_url(img_url)
+        cat_img = get_data_from_url(img_url)
         with open(filename, 'wb') as f:
             f.write(cat_img)
     except IOError as e:
