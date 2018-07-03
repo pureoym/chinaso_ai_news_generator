@@ -36,11 +36,6 @@ NEWS_API = 'http://data.mgt.chinaso365.com/datasrv/1.0/resources/01257/search?' 
            '&pagestart=1&fetchsize=%s' % API_SIZE
 
 
-def download_pics():
-    news_list = get_news_from_api()  # 通过接口获取新闻数据
-    image_process(news_list)  # 处理文本，保存至本地
-
-
 def main():
     news_list = get_news_from_api()  # 通过接口获取新闻数据
     # text_process(news_list)  # 处理文本，保存至本地
