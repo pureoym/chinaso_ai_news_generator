@@ -51,7 +51,10 @@ git下载
 ```
 git clone https://github.com/pureoym/news_generator.git
 ```
-
+更新
+```
+git pull
+```
 然后在/application/search目录下，通过如下命令执行脚本：
 ```
 source bin/enter_python37_env.sh
