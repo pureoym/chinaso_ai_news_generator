@@ -25,7 +25,7 @@ import os
 
 import utils
 
-API_SIZE = 100
+API_SIZE = 10000
 # NEWS_API = 'http://data.mgt.chinaso365.com/datasrv/1.0/resources/01257/search?' \
 #       'fields=id,secondLable,transferTime,headLine,dataContent,bigPic' \
 #       '&filters=EQS_thirdLable,突发事件|EQS_secondLable,国内新闻|NES_bigPic,NULL' \
