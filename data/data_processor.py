@@ -23,10 +23,10 @@ import csv
 import json
 import os
 # from ..utils import http_utils, data_utils
-from ..utils.http_utils import get_data_from_url
-from ..utils.data_utils import chinese_clean
+from utils.http_utils import get_data_from_url
+from utils.data_utils import chinese_clean
 
-API_SIZE = 100
+API_SIZE = 10
 # NEWS_API = 'http://data.mgt.chinaso365.com/datasrv/1.0/resources/01257/search?' \
 #       'fields=id,secondLable,transferTime,headLine,dataContent,bigPic' \
 #       '&filters=EQS_thirdLable,突发事件|EQS_secondLable,国内新闻|NES_bigPic,NULL' \
@@ -35,6 +35,10 @@ NEWS_API = 'http://data.mgt.chinaso365.com/datasrv/1.0/resources/01257/search?' 
            'fields=id,secondLable,transferTime,headLine,dataContent,bigPic' \
            '&filters=EQS_thirdLable,突发事件|EQS_secondLable,国内新闻|NES_bigPic,NULL' \
            '&pagestart=1&fetchsize=%s' % API_SIZE
+
+def download_pics():
+    news_list = get_news_from_api()  # 通过接口获取新闻数据
+    image_process(news_list)  # 处理文本，保存至本地
 
 
 def main():
