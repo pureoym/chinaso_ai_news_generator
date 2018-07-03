@@ -46,6 +46,12 @@ pip install numpy --ignore-intalled numpy
 ```
 vi /application/search/bin/enter_python37_env.sh
 ```
+### 配置项目
+git下载
+```
+git clone https://github.com/pureoym/news_generator.git
+```
+
 然后在/application/search目录下，通过如下命令执行脚本：
 ```
 source bin/enter_python37_env.sh
